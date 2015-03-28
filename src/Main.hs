@@ -1,8 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Prelude hiding (putStrLn)
-import Data.ByteString.Char8 as B
+import Data.Monoid
+import qualified Data.ByteString.Char8 as B
 
+spacedConcat :: [B.ByteString] -> B.ByteString
+spacedConcat [] = B.empty
+spacedConcat [b] = b
+spacedConcat bs = do
+  mconcat [head bs, " ", spacedConcat $ tail bs]
+
+main :: IO ()
 main = do
-  putStrLn $ B.take 5 "Hello, world!"
+  B.putStrLn $ spacedConcat ["I", "am", "hungry"]
